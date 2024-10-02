@@ -1,9 +1,15 @@
 from pathlib import Path
+import os
 import firebase_admin
 from firebase_admin import credentials
 
-firebase_cred = credentials.Certificate('mydocBackend/mydoc_api/credentials.json')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+FIREBASE_CREDENTIALS_PATH = os.path.join(BASE_DIR, '../firebase-credentials.json')
+
+firebase_cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
 firebase_admin.initialize_app(firebase_cred)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

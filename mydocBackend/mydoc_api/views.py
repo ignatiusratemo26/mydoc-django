@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import filters
 from .models import Doctor, Appointment, AvailableTimeSlot
 from .serializers import DoctorSerializer, AppointmentSerializer, AvailableTimeSlotSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -9,12 +10,18 @@ from rest_framework.permissions import IsAuthenticated
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['first_name', 'last_name', 'specialization']
+
 
 # ViewSet for Appointments
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['doctor__first_name', 'doctor__last_name', 'doctor__specialization']
+    
 
     def create(self, request, *args, **kwargs):
         # Book an appointment
