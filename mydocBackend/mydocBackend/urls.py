@@ -4,9 +4,9 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-urlpatterns = routers.urls
+urlpatterns = router.urls
 
-urlpatterns =+ [
+urlpatterns += [
     path('admin/', admin.site.urls),
     path('api/', include('mydoc_api.urls')),
 

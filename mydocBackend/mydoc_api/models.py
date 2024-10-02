@@ -7,12 +7,12 @@ class Doctor(models.Model):
     last_name = models.CharField(max_length=100)
     
     specialization = models.CharField(max_length=100)
-    image_url = models.URLField(null=True, blank=True)  # To store doctor's profile image
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True) 
     rating = models.FloatField(default=0.0)
     fee = models.DecimalField(max_digits=6, decimal_places=2)  # Fee for consultation
 
     def __str__(self):
-        return self.name
+        return self.first_name + ' ' + self.last_name
 
 # Appointment model
 class Appointment(models.Model):
@@ -30,7 +30,7 @@ class Appointment(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='upcoming')
 
     def __str__(self):
-        return f'{self.doctor.name} - {self.patient.username} - {self.appointment_date}'
+        return f'{self.doctor.first_name +" "+self.doctor.last_name} - {self.patient.username} - {self.appointment_date}'
 
 # Available Time Slots for Doctors
 class AvailableTimeSlot(models.Model):
@@ -42,4 +42,4 @@ class AvailableTimeSlot(models.Model):
     is_booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.doctor.name} - {self.available_date} - {self.start_time}'
+        return f'{self.doctor.first_name +" "+self.doctor.last_name} - {self.available_date} - {self.start_time}'

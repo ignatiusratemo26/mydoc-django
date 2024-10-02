@@ -5,7 +5,7 @@ from .models import Doctor, Appointment, AvailableTimeSlot
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'specialization', 'rating', 'fee')
-    search_fields = ('name', 'specialization')
+    search_fields = ('first_name', 'last_name', 'specialization')
     list_filter = ('specialization',)
 
 # Register Appointment model

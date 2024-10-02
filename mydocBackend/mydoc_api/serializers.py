@@ -4,7 +4,7 @@ from .models import Doctor, Appointment, AvailableTimeSlot
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ['id', 'first_name', 'last_name', 'specialization', 'image_url', 'rating', 'fee']
+        fields = ['id', 'first_name', 'last_name', 'specialization', 'profile_picture', 'rating', 'fee']
 
 class AvailableTimeSlotSerializer(serializers.ModelSerializer):
     class Meta:
