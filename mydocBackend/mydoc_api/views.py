@@ -1,10 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from mydoc_api.authentication import FirebaseAuthentication
 from rest_framework import filters
 from .models import Doctor, Appointment, AvailableTimeSlot
 from .serializers import DoctorSerializer, AppointmentSerializer, AvailableTimeSlotSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # ViewSet for managing Doctors
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
@@ -12,6 +13,8 @@ class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DoctorSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['first_name', 'last_name', 'specialization']
+    permission_classes = [AllowAny]
+    authentication_classes = [FirebaseAuthentication]
 
 
 # ViewSet for Appointments
@@ -19,9 +22,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [FirebaseAuthentication]
     filter_backends = [filters.SearchFilter]
     search_fields = ['doctor__first_name', 'doctor__last_name', 'doctor__specialization']
-    
+
 
     def create(self, request, *args, **kwargs):
         # Book an appointment
@@ -64,6 +68,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 class AvailableTimeSlotViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AvailableTimeSlot.objects.all()
     serializer_class = AvailableTimeSlotSerializer
+    authentication_classes = [FirebaseAuthentication]
 
     def get_queryset(self):
         doctor_id = self.request.query_params.get('doctor_id')
@@ -73,3 +78,5 @@ class AvailableTimeSlotViewSet(viewsets.ReadOnlyModelViewSet):
         if doctor_id and date:
             return AvailableTimeSlot.objects.filter(doctor_id=doctor_id, available_date=date, is_available=True)
         return super().get_queryset()
+    
+    
