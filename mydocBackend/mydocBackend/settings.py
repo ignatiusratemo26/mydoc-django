@@ -6,7 +6,7 @@ from firebase_admin import credentials
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-FIREBASE_CREDENTIALS_PATH = BASE_DIR / '../firebase-credentials.json'
+FIREBASE_CREDENTIALS_PATH = BASE_DIR / 'firebase-credentials.json'
 
 firebase_cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
 firebase_admin.initialize_app(firebase_cred)
@@ -24,7 +24,11 @@ SECRET_KEY = 'django-insecure-8l(cu)va=tclqbrervix=v)z8zt7g@pt2669&e%@63@@5+)ka-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '.vercel.app',
+    '127.0.0.1',
+]
 
 
 # Application definition

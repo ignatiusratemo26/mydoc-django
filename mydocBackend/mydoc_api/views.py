@@ -6,6 +6,7 @@ from rest_framework import filters
 from .models import Doctor, Appointment, AvailableTimeSlot
 from .serializers import DoctorSerializer, AppointmentSerializer, AvailableTimeSlotSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.http import JsonResponse
 
 # ViewSet for managing Doctors
 class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
@@ -15,6 +16,10 @@ class DoctorViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['first_name', 'last_name', 'specialization']
     permission_classes = [AllowAny]
     authentication_classes = [FirebaseAuthentication]
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 # ViewSet for Appointments
@@ -26,6 +31,13 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['doctor__first_name', 'doctor__last_name', 'doctor__specialization']
 
+    def list(self, request, *args, **kwargs):
+        try:
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
     def create(self, request, *args, **kwargs):
         # Book an appointment

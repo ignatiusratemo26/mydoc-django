@@ -15,7 +15,7 @@ class FirebaseAuthentication(BaseAuthentication):
     def authenticate(self, request):
         id_token = request.headers.get('Authorization')
         if not id_token:
-            return JsonResponse({'error': 'Authorization header missing'}, status=400)
+            raise AuthenticationFailed('Authorization header missing')
         
         if id_token.startswith('Bearer '):
             id_token = id_token.split(' ')[1]
@@ -31,12 +31,12 @@ class FirebaseAuthentication(BaseAuthentication):
             raise AuthenticationFailed('User matching query does not exist')
         except auth.InvalidIdTokenError:
             logger.error('Invalid Firebase token')
-            return JsonResponse({'error', 'Invalid Firebase token'}, status=401)
+            raise AuthenticationFailed('Invalid Firebase token')
         
         except auth.ExpiredIdTokenError:
             logger.error('Expired Firebase token')
-            return JsonResponse({'error': 'Expired Firebase token'}, status=401)
+            raise AuthenticationFailed('Expired Firebase token')
         except Exception as e:
             logger.error(f'Unexpected error: {e}')
-            return JsonResponse({'error': 'Internal Server Error'}, status=500)
+            raise AuthenticationFailed('Internal Server Error')
 
